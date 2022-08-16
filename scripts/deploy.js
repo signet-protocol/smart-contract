@@ -6,7 +6,7 @@ async function main() {
   const url = process.env.MUMBAI_URL;
 
   // woah, we just cut out the whole compile.js flow with this!
-  let artifacts = await hre.artifacts.readArtifact("RTSProxyWallet");
+  let artifacts = await hre.artifacts.readArtifact("SignetRegistry");
 
   const provider = new ethers.providers.JsonRpcProvider(url);
 
