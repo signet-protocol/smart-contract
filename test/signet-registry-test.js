@@ -1,12 +1,17 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("SignetRegistry", function () {
   async function deployContract() {
     const [owner, addr1] = await ethers.getSigners();
+    const SignatureVerification = await ethers.getContractFactory("SignatureVerification");
+    const hardhatSignatureVerification = await SignatureVerification.deploy();
     const SignetRegistry = await ethers.getContractFactory("SignetRegistry");
-    const hardhatSignetRegistry = await SignetRegistry.deploy();
+    // const hardhatSignetRegistry = await SignetRegistry.deploy(owner, hardhatSignatureVerification.address);
+    const hardhatSignetRegistry = await upgrades.deployProxy(SignetRegistry, [await owner.getAddress(), hardhatSignatureVerification.address], {
+        initializer: "initialize",
+    });
     const signetAddress = "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d";
     const signetAddress2 = "0xf0d9A38494b40b72dcd7A5CA109fd59d80b88337";
     const zeroAddress = "0x0000000000000000000000000000000000000000";
